@@ -1,0 +1,63 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+a=pd.read_clipboard()
+
+sns.pairplot(a, hue="Region", palette="crest")
+sns.pairplot(a, hue="Category", palette="magma")
+
+fig, axs=plt.subplots(2,2,figsize=(10,10))
+sns.distplot(a['Sales'], ax=axs[0,0],color="red")
+sns.distplot(a['Discount'], ax=axs[0,1],color="orange")
+sns.distplot(a['Quantity'], ax=axs[1,0],color="violet")
+sns.distplot(a['Profit'], ax=axs[1,1],color="green")
+
+c= a.corr()
+sns.heatmap(c, annot=True, cmap="cubehelix")
+
+a.groupby("Ship Mode")["Profit"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("Region")["Profit"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("State")["Profit"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("Category")["Profit"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("Sub-Category")["Profit"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("Region")["Sales"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("State")["Sales"].agg(["sum"]).plot.bar()
+plt.show()
+a.groupby("Sub-Category")["Sales"].agg(["sum"]).plot.bar(color="pink")
+plt.show()
+
+plt.figure(figsize=(20,15))
+plt.bar('Sub-Category','Category', data=a, color="red")
+plt.show()
+
+plt.figure(figsize=(22,8))
+sns.countplot(x=a["State"], palette="icefire")
+plt.xticks(rotation=90)
+plt.show()   
+s=a['State'].value_counts()
+s.mean()
+
+d=a['City'].value_counts()
+d=d.tail(20)
+d.plot(kind='bar',figsize=(20,7),color="crimson")
+plt.xticks(rotation=90)
+plt.show()
+
+x=a.groupby(["State"])[['Profit','Discount','Sales']].mean()
+y=x.sort_values('Sales')
+y[['Sales']].plot(kind='bar', figsize=(20,8),color="cyan")
+plt.title("state wise sales")
+plt.xlabel("States")
+plt.ylabel("Sales")
+plt.show()
+
+plt.figure(figsize=(10,7))
+sns.lineplot(x=a.Region, y=a.Profit, hue=a.Category)
+plt.show()
+
